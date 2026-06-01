@@ -11,13 +11,14 @@ return {
       }
     },
     config = function()
-      require("lspconfig").lua_ls.setup {}
-
+      -- require("lspconfig").lua_ls.setup {}
+      vim.lsp.config("lua_ls", {})
+      -- vim.lsp.config("",{})
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
           local client = vim.lsp.get_client_by_id(args.data.client_id)
           if not client then return end
-          if client.supports_method("textDocument/formatting") then
+          if client:supports_method("textDocument/formatting") then
             vim.api.nvim_create_autocmd("BufWritePre", {
               buffer = args.buf,
               callback = function()
@@ -29,9 +30,30 @@ return {
           end
         end,
       })
-      require("lspconfig").pylsp.setup {}
-      require("lspconfig").cssls.setup {}
-      require 'lspconfig'.clangd.setup {}
+      vim.lsp.config("pylsp", {})
+      vim.lsp.config("cssls", {})
+      vim.lsp.config("ts_ls",{})
+      vim.lsp.config("clangd", {})
+      vim.lsp.config("rust_analyzer", {
+        filetypes = { 'rust', 'toml' },
+
+        settings = {
+          ['rust-analyzer'] = {
+            diagnostics = {
+              enable = true,
+            }
+          }
+        }
+      })
+      vim.lsp.enable("rust_analyzer")
+      -- vim.lsp.enable("clangd")
+      vim.lsp.enable("pylsp")
+      vim.lsp.enable("cssls")
+      vim.lsp.enable("tsls")
+      -- require("lspconfig").pylsp.setup {}
+      -- require("lspconfig").cssls.setup {}
+      -- require 'lspconfig'.clangd.setup {}
+      -- require 'lspconfig'.rust_analyzer.setup {}
     end,
   }
 }
